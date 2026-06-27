@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<script>document.documentElement.setAttribute("data-theme", localStorage.getItem("psycheos_theme")||"light");</script>
+<title>PSYCHE.OS · Console</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/typography.css">
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/animations.css">
+<link rel="stylesheet" href="css/particles.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/widgets.css">
+<link rel="stylesheet" href="css/calendar.css">
+<link rel="stylesheet" href="css/guide.css">
+<link rel="stylesheet" href="css/theme-light.css">
+</head>
+<body>
+
+<!-- ambient point cloud -->
+<canvas id="cloud"></canvas>
+<div class="cloud-mask"></div>
+
+<!-- HUD frame -->
+<div class="hud-frame">
+  <span class="hud-bracket tl"></span><span class="hud-bracket tr"></span>
+  <span class="hud-bracket bl"></span><span class="hud-bracket br"></span>
+  <span class="hud-readout tl">PSYCHE.OS // V3</span>
+  <span class="hud-readout tr" id="hudClock">--:--:--</span>
+  <span class="hud-readout bl">REC <span id="hudCount">0000</span></span>
+  <span class="hud-readout br">LOCAL // ENCRYPTED-AT-REST*</span>
+</div>
+
+<!-- app shell -->
+<div class="app">
+
+  <!-- topbar -->
+  <header class="topbar">
+    <span class="topbar-logo">PSYCHE<b>.OS</b></span>
+    <span class="topbar-meta" id="topbarMeta">COUNSELLOR CONSOLE</span>
+    <span class="topbar-spacer"></span>
+    <span class="topbar-time" id="topbarTime">--:--:--</span>
+  </header>
+
+  <!-- middle: sidebar + content -->
+  <div class="shell">
+    <nav class="sidebar">
+      <div class="nav-group">
+        <div class="nav-cap">Console</div>
+        <div class="nav-item active" id="nav-dashboard" onclick="App.showView('dashboard')">
+          <span class="glyph">◇</span><span class="label">Dashboard</span></div>
+        <div class="nav-item" id="nav-students" onclick="App.showView('students')">
+          <span class="glyph">◫</span><span class="label">Students</span><span class="nav-badge" id="nb-students">0</span></div>
+        <div class="nav-item" id="nav-sessions" onclick="App.showView('sessions')">
+          <span class="glyph">≡</span><span class="label">Sessions</span><span class="nav-badge" id="nb-sessions">0</span></div>
+        <div class="nav-item" id="nav-calendar" onclick="App.showView('calendar')">
+          <span class="glyph">▦</span><span class="label">Calendar</span><span class="nav-badge" id="nb-calendar">0</span></div>
+        <div class="nav-item" id="nav-assessments" onclick="App.showView('assessments')">
+          <span class="glyph">▤</span><span class="label">Assessments</span><span class="nav-badge" id="nb-assessments">0</span></div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-cap">Safeguarding</div>
+        <div class="nav-item" id="nav-risk" onclick="App.showView('risk')">
+          <span class="glyph">△</span><span class="label">Risk Register</span><span class="nav-badge" id="nb-risk">0</span></div>
+        <div class="nav-item" id="nav-reports" onclick="App.showView('reports')">
+          <span class="glyph">▢</span><span class="label">Reports</span></div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-cap">Reference</div>
+        <div class="nav-item" id="nav-guide" onclick="App.showView('guide')">
+          <span class="glyph">§</span><span class="label">Guide</span><span class="nav-badge" id="nb-guide">0</span></div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-cap">System</div>
+        <div class="nav-item" id="nav-audit" onclick="App.showView('audit')">
+          <span class="glyph">⊡</span><span class="label">Audit Log</span></div>
+        <div class="nav-item" id="nav-settings" onclick="App.showView('settings')">
+          <span class="glyph">⚙</span><span class="label">Settings</span></div>
+        <div class="nav-item" onclick="App.lock()">
+          <span class="glyph">⏻</span><span class="label">Lock</span></div>
+      </div>
+    </nav>
+
+    <!-- content -->
+    <main class="content">
+
+      <!-- DASHBOARD -->
+      <section class="view active" id="view-dashboard">
+        <div class="view-head">
+          <div class="grow">
+            <div class="view-title">Overview</div>
+            <div class="view-sub" id="dashDate">—</div>
+          </div>
+          <button class="btn sm" onclick="App.showView('students')">Open roster ▸</button>
+        </div>
+
+        <div class="grid grid-stats">
+          <div class="stat"><div class="stat-label">Total</div><div class="stat-value" id="st-total">0</div><div class="stat-foot">records on file</div></div>
+          <div class="stat"><div class="stat-label">Active</div><div class="stat-value" id="st-active">0</div><div class="stat-foot">in counselling</div></div>
+          <div class="stat"><div class="stat-label">Monitoring</div><div class="stat-value" id="st-monitor">0</div><div class="stat-foot">watchful waiting</div></div>
+          <div class="stat alert"><div class="stat-label">At Risk</div><div class="stat-value" id="st-risk">0</div><div class="stat-foot">high flags</div></div>
+        </div>
+
+        <div class="grid grid-stats" style="margin-top:14px">
+          <div class="stat"><div class="stat-label">New</div><div class="stat-value" id="st-new">0</div><div class="stat-foot">awaiting intake</div></div>
+          <div class="stat"><div class="stat-label">Closed</div><div class="stat-value" id="st-closed">0</div><div class="stat-foot">cases resolved</div></div>
+          <div class="stat"><div class="stat-label">Sessions</div><div class="stat-value" id="st-sessions">0</div><div class="stat-foot">logged total</div></div>
+          <div class="stat"><div class="stat-label">Measures</div><div class="stat-value" id="st-assess">0</div><div class="stat-foot">assessments run</div></div>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:14px">
+          <div class="panel">
+            <div class="panel-head"><span class="panel-title">Recent Records</span></div>
+            <div id="recentList"><div class="empty">No records yet</div></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><span class="panel-title">Risk Register</span></div>
+            <div id="riskList"><div class="empty">No active risk flags</div></div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:14px">
+          <div class="panel-head"><span class="panel-title">Upcoming Sessions</span>
+            <span class="grow"></span>
+            <button class="btn ghost sm" onclick="App.showView('calendar')">Open calendar ▸</button></div>
+          <div id="upcomingList"><div class="empty">Nothing scheduled</div></div>
+        </div>
+
+        <div class="panel" style="margin-top:14px">
+          <div class="panel-head"><span class="panel-title">Class Distribution</span></div>
+          <div id="classDist"><div class="empty">No data</div></div>
+        </div>
+      </section>
+
+      <!-- STUDENTS -->
+      <section class="view" id="view-students">
+        <div class="view-head">
+          <div class="grow">
+            <div class="view-title">Students</div>
+            <div class="view-sub">Caseload roster · <span id="rosterCount">0 / 0</span></div>
+          </div>
+          <button class="btn" onclick="Students.openAdd()">+ New record</button>
+        </div>
+
+        <div class="toolbar">
+          <input class="input search" id="studentSearch" type="text" placeholder="Search name, ID, tag, concern…" oninput="Students.renderTable()">
+          <select class="select filter" id="filterStatus" onchange="Students.renderTable()">
+            <option value="">ALL STATUS</option>
+            <option>New</option><option>Active</option><option>Monitoring</option>
+            <option>Closed</option><option>Archived</option><option>Graduated</option><option>Transferred</option>
+          </select>
+          <select class="select filter" id="filterClass" onchange="Students.renderTable()">
+            <option value="">ALL CLASSES</option>
+          </select>
+        </div>
+
+        <table class="table">
+          <thead><tr><th>ID</th><th>Name</th><th>Class</th><th>Status</th><th>Risk</th><th>Concern</th></tr></thead>
+          <tbody id="rosterBody"></tbody>
+        </table>
+      </section>
+
+      <!-- PROFILE -->
+      <section class="view" id="view-profile">
+        <div class="view-head">
+          <div class="grow"><div class="view-title">Case File</div><div class="view-sub">Student profile</div></div>
+          <button class="btn sm ghost" onclick="App.showView('students')">◂ Back to roster</button>
+        </div>
+        <div id="profileWrap"></div>
+      </section>
+
+      <!-- RISK -->
+      <section class="view" id="view-risk">
+        <div class="view-head">
+          <div class="grow"><div class="view-title">Risk Register</div>
+            <div class="view-sub">Safeguarding · POCSO / Manodarpan aligned</div></div>
+        </div>
+        <div id="riskViewBody"></div>
+      </section>
+
+      <!-- SESSIONS -->
+      <section class="view" id="view-sessions">
+        <div class="view-head">
+          <div class="grow"><div class="view-title">Sessions</div>
+            <div class="view-sub">Most recent 40 across caseload</div></div>
+        </div>
+        <div class="panel"><div id="sessionsViewBody"></div></div>
+      </section>
+
+      <!-- CALENDAR -->
+      <section class="view" id="view-calendar">
+        <div class="view-head">
+          <div class="grow"><div class="view-title">Calendar</div>
+            <div class="view-sub">Schedule and track upcoming sessions</div></div>
+        </div>
+        <div id="calendarBody"></div>
+      </section>
+
+      <!-- GUIDE -->
+      <section class="view" id="view-guide">
+        <div class="view-head">
+          <div class="grow"><div class="view-title">Counsellor's Guide</div>
+            <div class="view-sub">Documentation, frameworks, and a glossary for new counsellors</div></div>
+        </div>
+        <div id="guideBody"></div>
+      </section>
+
+      <!-- ASSESSMENTS -->
+      <section class="view" id="view-assessments">
+        <div class="view-head">
+          <div class="grow"><div class="view-title">Assessments</div>
+            <div class="view-sub">PHQ-9 · GAD-7 · SDQ · most recent 40</div></div>
+        </div>
+        <div class="panel"><div id="assessViewBody"></div></div>
+      </section>
+
+      <!-- REPORTS -->
+      <section class="view" id="view-reports">
+        <div class="view-head">
+          <div class="grow"><div class="view-title">Reports</div>
+            <div class="view-sub">Confidential case summary · print-ready</div></div>
+        </div>
+        <div class="toolbar">
+          <select class="select search" id="reportPicker"><option value="">Select a student…</option></select>
+          <button class="btn sm" onclick="(function(){var v=document.getElementById('reportPicker').value; if(v) Reports.openFor(v); else App.toast('Pick a student first', true);})()">Build</button>
+          <button class="btn sm ghost" onclick="Reports.print()">Print</button>
+          <button class="btn sm ghost" onclick="Reports.exportHTML()">Export HTML</button>
+        </div>
+        <div class="t-label" style="margin-bottom:8px">PREVIEW · <span id="reportStudent" style="color:var(--fg)">—</span></div>
+        <iframe id="reportPreview" style="width:100%;height:62vh;border:1px solid var(--line);background:#fff"></iframe>
+      </section>
+
+      <!-- AUDIT -->
+      <section class="view" id="view-audit">
+        <div class="view-head">
+          <div class="grow"><div class="view-title">Audit Log</div>
+            <div class="view-sub">Local activity trail · last 500 events</div></div>
+        </div>
+        <table class="table">
+          <thead><tr><th>Time</th><th>Event</th><th>Detail</th></tr></thead>
+          <tbody id="auditBody"></tbody>
+        </table>
+      </section>
+
+      <!-- SETTINGS -->
+      <section class="view" id="view-settings">
+        <div class="view-head">
+          <div class="grow"><div class="view-title">Settings</div>
+            <div class="view-sub">Identity · data · backup</div></div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="panel">
+            <div class="panel-head"><span class="panel-title">Identity</span></div>
+            <div class="field"><label class="field-label">Counsellor name</label>
+              <input class="input" id="set-counsellor" type="text" placeholder="Your name"></div>
+            <div class="field"><label class="field-label">School name</label>
+              <input class="input" id="set-school" type="text" placeholder="St. Thomas School"></div>
+            <button class="btn sm" onclick="App.saveSettings()">Save</button>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><span class="panel-title">Data &amp; Backup</span></div>
+            <div class="t-soft" style="margin-bottom:6px">Last saved</div>
+            <div class="t-mono" id="lastSaved" style="margin-bottom:16px">NEVER</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn sm" onclick="App.exportJSON()">Backup JSON</button>
+              <button class="btn sm ghost" onclick="App.exportCSV()">Export CSV</button>
+              <button class="btn sm ghost" onclick="App.triggerRestore()">Restore</button>
+            </div>
+            <div class="rule"></div>
+            <button class="btn sm danger" onclick="App.wipe()">Wipe all records</button>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:14px">
+          <div class="panel-head"><span class="panel-title">Appearance</span></div>
+          <div class="t-soft" style="margin-bottom:12px;line-height:1.6">Light is the everyday default: clean, high-contrast, no particle background. Dark is the Monochrome Point Cloud build.</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn sm" id="theme-light-btn" onclick="App.setTheme('light')">Light</button>
+            <button class="btn sm ghost" id="theme-dark-btn" onclick="App.setTheme('dark')">Dark (HUD)</button>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:14px">
+          <div class="panel-head"><span class="panel-title">About</span></div>
+          <div class="t-soft" style="line-height:1.7">
+            PSYCHE.OS v3 · Monochrome Point Cloud build. Runs fully on this device.
+            Records persist in local browser storage and migrate automatically from a v2 install.
+            *At-rest encryption and the cloud-sync pipeline are scaffolded as extension points in this build.
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- statusbar -->
+  <footer class="statusbar">
+    <span id="sbSchool">SCHOOL</span>
+    <span class="grow"></span>
+    <span id="sbRecords">0 RECORDS</span>
+    <span>LOCAL JSON · V3</span>
+  </footer>
+</div>
+
+<!-- STUDENT MODAL -->
+<div class="overlay" id="studentModal">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title" id="modalTitle">New Record</span>
+      <span class="modal-x" onclick="Students.closeModal()">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="field"><label class="field-label">Record ID</label>
+        <input class="input" id="f-id" type="text" readonly></div>
+      <div class="form-grid">
+        <div class="field"><label class="field-label">Full name *</label><input class="input" id="f-name" type="text"></div>
+        <div class="field"><label class="field-label">Preferred name</label><input class="input" id="f-preferred" type="text"></div>
+        <div class="field"><label class="field-label">Class *</label><input class="input" id="f-class" type="text" placeholder="e.g. 10"></div>
+        <div class="field"><label class="field-label">Section</label><input class="input" id="f-section" type="text" placeholder="e.g. A"></div>
+        <div class="field"><label class="field-label">House</label>
+          <select class="select" id="f-house">
+            <option value="">—</option>
+            <option>Aravalli Hills</option><option>Negri Hills</option>
+            <option>Vindhya Hills</option><option>Himalayas</option>
+          </select></div>
+        <div class="field"><label class="field-label">Status</label>
+          <select class="select" id="f-status">
+            <option>New</option><option>Active</option><option>Monitoring</option>
+            <option>Closed</option><option>Archived</option><option>Graduated</option><option>Transferred</option>
+          </select></div>
+        <div class="field"><label class="field-label">Date of birth</label><input class="input" id="f-dob" type="date"></div>
+        <div class="field"><label class="field-label">Gender</label>
+          <select class="select" id="f-gender">
+            <option value="">—</option><option>Male</option><option>Female</option><option>Other</option>
+          </select></div>
+        <div class="field"><label class="field-label">Guardian name</label><input class="input" id="f-parentName" type="text"></div>
+        <div class="field"><label class="field-label">Guardian contact</label><input class="input" id="f-parentContact" type="text"></div>
+      </div>
+      <div class="field"><label class="field-label">Presenting concern</label><textarea class="textarea" id="f-concern"></textarea></div>
+      <div class="field"><label class="field-label">Tags (comma separated)</label><input class="input" id="f-tags" type="text" placeholder="e.g. anxiety, academic"></div>
+      <div class="field"><label class="field-label">Notes</label><textarea class="textarea" id="f-notes"></textarea></div>
+
+      <label class="field-label">Risk flags</label>
+      <div class="flag-grid" id="flagGrid"></div>
+    </div>
+    <div class="modal-foot">
+      <span class="modal-err" id="modalErr" style="margin-right:auto"></span>
+      <button class="btn ghost sm" onclick="Students.closeModal()">Cancel</button>
+      <button class="btn sm" onclick="Students.save()">Save record</button>
+    </div>
+  </div>
+</div>
+
+<!-- SESSION MODAL -->
+<div class="overlay" id="sessionModal">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title">Log Session</span>
+      <span class="modal-x" onclick="Students.closeSession()">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field"><label class="field-label">Date</label><input class="input" id="sf-date" type="date"></div>
+        <div class="field"><label class="field-label">Type</label>
+          <select class="select" id="sf-type">
+            <option>Individual</option><option>Group</option><option>Crisis</option>
+            <option>Parent Meeting</option><option>Follow-up</option><option>Intake</option><option>Observation</option>
+          </select></div>
+        <div class="field"><label class="field-label">Location</label>
+          <select class="select" id="sf-location">
+            <option>Counselling room</option><option>Classroom</option><option>Online / video</option>
+            <option>Phone</option><option>Corridor / informal</option><option>Home visit</option><option>Other</option>
+          </select></div>
+        <div class="field"><label class="field-label">Duration</label>
+          <select class="select" id="sf-duration">
+            <option>15 min</option><option>30 min</option><option>45 min</option><option>60 min</option><option>90 min</option>
+          </select></div>
+        <div class="field"><label class="field-label">Student response</label>
+          <select class="select" id="sf-mood">
+            <option>Engaged</option><option>Cooperative</option><option>Guarded</option><option>Withdrawn</option>
+            <option>Distressed</option><option>Resistant</option><option>Flat</option><option>Elevated</option>
+          </select></div>
+        <div class="field"><label class="field-label">Risk at session</label>
+          <select class="select" id="sf-risk">
+            <option>None observed</option><option>Low</option><option>Moderate</option><option>High</option><option>Safeguarding raised</option>
+          </select></div>
+      </div>
+      <div class="field"><label class="field-label">Presenting issue</label><textarea class="textarea" id="sf-presentingIssue"></textarea></div>
+      <div class="field"><label class="field-label">Themes (comma separated)</label><input class="input" id="sf-themes" type="text" placeholder="e.g. exam stress, sleep"></div>
+      <div class="field"><label class="field-label">Interventions (comma separated)</label><input class="input" id="sf-interventions" type="text" placeholder="e.g. CBT, psychoeducation"></div>
+      <div class="field"><label class="field-label">Next steps</label><textarea class="textarea" id="sf-nextSteps"></textarea></div>
+      <div class="field"><label class="field-label">Free notes</label><textarea class="textarea" id="sf-notes"></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost sm" onclick="Students.closeSession()">Cancel</button>
+      <button class="btn sm" onclick="Students.saveSession()">Save session</button>
+    </div>
+  </div>
+</div>
+
+<!-- APPOINTMENT MODAL -->
+<div class="overlay" id="apptModal">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title" id="apptModalTitle">Schedule Session</span>
+      <span class="modal-x" onclick="Calendar.closeModal()">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="field"><label class="field-label">Student</label>
+        <select class="select" id="ap-student"></select></div>
+      <div class="form-grid">
+        <div class="field"><label class="field-label">Date</label><input class="input" id="ap-date" type="date"></div>
+        <div class="field"><label class="field-label">Time</label><input class="input" id="ap-time" type="time"></div>
+        <div class="field"><label class="field-label">Duration</label>
+          <select class="select" id="ap-duration">
+            <option>15 min</option><option>30 min</option><option>45 min</option><option>60 min</option><option>90 min</option>
+          </select></div>
+        <div class="field"><label class="field-label">Type</label>
+          <select class="select" id="ap-type">
+            <option>Individual</option><option>Group</option><option>Parent Meeting</option>
+            <option>Assessment</option><option>Follow-up</option><option>Crisis</option><option>Observation</option>
+          </select></div>
+        <div class="field"><label class="field-label">Location</label>
+          <select class="select" id="ap-location">
+            <option>Counselling room</option><option>Classroom</option><option>Online / video</option>
+            <option>Phone</option><option>Corridor / informal</option><option>Home visit</option><option>Other</option>
+          </select></div>
+        <div class="field"><label class="field-label">Status</label>
+          <select class="select" id="ap-status">
+            <option>Scheduled</option><option>Completed</option><option>Cancelled</option><option>No-show</option>
+          </select></div>
+      </div>
+      <div class="field"><label class="field-label">Notes</label><textarea class="textarea" id="ap-notes"></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost sm danger" id="apptDelete" onclick="Calendar.deleteAppt()" style="display:none">Delete</button>
+      <span class="grow"></span>
+      <button class="btn ghost sm" onclick="Calendar.closeModal()">Cancel</button>
+      <button class="btn sm" onclick="Calendar.save()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- toast + restore -->
+<div class="toast" id="toast"></div>
+<input type="file" id="restoreInput" accept="application/json" hidden>
+
+<!-- libs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<!-- app modules (storage → cloud → data → ai → reports → dashboard → students → orchestrator) -->
+<script src="js/storage.js"></script>
+<script src="js/particles.js"></script>
+<script src="js/assessments.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/reports.js"></script>
+<script src="js/clinical.js"></script>
+<script src="js/calendar.js"></script>
+<script src="js/guide.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/students.js"></script>
+<script src="js/app.js"></script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
+</body>
+</html>

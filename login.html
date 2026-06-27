@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<script>document.documentElement.setAttribute("data-theme", localStorage.getItem("psycheos_theme")||"light");</script>
+<title>PSYCHE.OS · Sign in</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/typography.css">
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/animations.css">
+<link rel="stylesheet" href="css/particles.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/widgets.css">
+<link rel="stylesheet" href="css/entry.css">
+<link rel="stylesheet" href="css/theme-light.css">
+</head>
+<body>
+
+<canvas id="cloud"></canvas>
+<div class="cloud-mask"></div>
+
+<div class="hud-frame">
+  <span class="hud-bracket tl"></span><span class="hud-bracket tr"></span>
+  <span class="hud-bracket bl"></span><span class="hud-bracket br"></span>
+  <span class="hud-readout tl">PSYCHE.OS // V3</span>
+  <span class="hud-readout tr">SECURE CONSOLE</span>
+  <span class="hud-readout bl">SESSION GATE</span>
+  <span class="hud-readout br" id="lockClock">--:--:--</span>
+</div>
+
+<div class="lock">
+  <div class="lock-inner">
+    <div class="lock-mark">SCHOOL COUNSELLOR CONSOLE</div>
+    <h1 class="lock-title">PSYCHE<b>.OS</b></h1>
+    <div class="lock-sub">IDENTIFY TO CONTINUE</div>
+
+    <div class="lock-field field">
+      <label class="field-label">Counsellor name</label>
+      <input class="input" id="who" type="text" placeholder="Your name" autocomplete="name">
+    </div>
+    <div class="lock-field field">
+      <label class="field-label">Passphrase</label>
+      <input class="input" id="pass" type="password" placeholder="Local passphrase" autocomplete="current-password">
+    </div>
+
+    <button class="btn" id="enterBtn" style="width:100%;justify-content:center">UNLOCK ▸</button>
+    <div class="lock-err" id="lockErr"></div>
+    <div class="t-faint" style="font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;margin-top:6px">
+      LOCAL GATE ONLY · DATA NEVER LEAVES THIS DEVICE
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/particles.js"></script>
+<script>
+(function () {
+  Store.load();
+  Cloud.init('cloud');
+  if (window.gsap) Cloud.assemble && Cloud.assemble(function(){});
+
+  var clock = document.getElementById('lockClock');
+  function tick(){ if (clock) clock.textContent = new Date().toLocaleTimeString('en-IN',{hour12:false}); }
+  tick(); setInterval(tick, 1000);
+
+  var who  = document.getElementById('who');
+  var pass = document.getElementById('pass');
+  var err  = document.getElementById('lockErr');
+
+  // prefill last counsellor name if present
+  if (Store.settings.counsellorName) who.value = Store.settings.counsellorName;
+
+  function unlock() {
+    var name = (who.value || '').trim();
+    if (!name) { err.textContent = 'Enter your name to continue.'; who.focus(); return; }
+    // first run sets the passphrase; later runs must match it
+    var saved = Store.settings.master || '';
+    var entered = pass.value || '';
+    if (!saved) {
+      Store.settings = Object.assign({}, Store.settings, { counsellorName: name, master: entered });
+      Store.saveSettings();
+    } else {
+      if (entered !== saved) { err.textContent = 'Passphrase does not match.'; pass.focus(); return; }
+      if (name !== Store.settings.counsellorName) {
+        Store.settings = Object.assign({}, Store.settings, { counsellorName: name });
+        Store.saveSettings();
+      }
+    }
+    Store.unlock(name);
+    Store.logAudit('LOGIN', name);
+    var go = function(){ window.location.href = 'dashboard.html'; };
+    if (Cloud.disperse) { Cloud.disperse(go); setTimeout(go, 1200); } else go();
+  }
+
+  document.getElementById('enterBtn').addEventListener('click', unlock);
+  pass.addEventListener('keydown', function(e){ if (e.key === 'Enter') unlock(); });
+  who.addEventListener('keydown',  function(e){ if (e.key === 'Enter') pass.focus(); });
+})();
+</script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
+</body>
+</html>

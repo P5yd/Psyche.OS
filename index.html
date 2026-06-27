@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<script>document.documentElement.setAttribute("data-theme", localStorage.getItem("psycheos_theme")||"light");</script>
+<title>PSYCHE.OS</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/typography.css">
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/animations.css">
+<link rel="stylesheet" href="css/particles.css">
+<link rel="stylesheet" href="css/entry.css">
+<link rel="stylesheet" href="css/theme-light.css">
+</head>
+<body>
+
+<!-- point cloud sits behind everything -->
+<canvas id="cloud"></canvas>
+<div class="cloud-mask"></div>
+
+<!-- HUD frame -->
+<div class="hud-frame">
+  <span class="hud-bracket tl"></span><span class="hud-bracket tr"></span>
+  <span class="hud-bracket bl"></span><span class="hud-bracket br"></span>
+  <span class="hud-readout tl">PSYCHE.OS // V3</span>
+  <span class="hud-readout tr">MONOCHROME POINT CLOUD</span>
+  <span class="hud-readout bl">LOCAL JSON STORE</span>
+  <span class="hud-readout br">ST. THOMAS SCHOOL</span>
+</div>
+
+<!-- boot overlay -->
+<div class="boot">
+  <div class="boot-mark">SCHOOL COUNSELLOR CONSOLE</div>
+  <h1 class="boot-title" id="bootTitle">PSYCHE<b>.OS</b></h1>
+  <div class="boot-sub" id="bootSub">CASE MANAGEMENT SYSTEM</div>
+  <div class="boot-bar"><i></i></div>
+  <div class="boot-log" id="bootLog">&gt; STANDBY</div>
+  <div class="boot-mark" id="bootCount" style="margin-top:18px;margin-bottom:0"></div>
+  <div class="boot-enter" id="bootEnter" hidden style="opacity:0">ENTER ▸</div>
+</div>
+
+<!-- libs (graceful degrade if blocked offline) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<!-- app -->
+<script src="js/storage.js"></script>
+<script src="js/particles.js"></script>
+<script src="js/boot.js"></script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
+</body>
+</html>
