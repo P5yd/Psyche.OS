@@ -1,0 +1,194 @@
+/* ============================================================
+   PSYCHE.OS v3 · theme-light.css
+   Professional light theme for everyday clinical use. Off-white
+   surfaces, accessible contrast (WCAG AA), softened corners, and
+   no particle / HUD layer. Scoped to [data-theme="light"] so the
+   dark Monochrome Point Cloud build stays available via the toggle.
+   Loaded LAST so it wins.
+   ============================================================ */
+
+/* ---------------- tokens ---------------- */
+[data-theme="light"] {
+  --bg:          #eef3f2;   /* faint teal-tinted off-white */
+  --panel:       #ffffff;
+  --panel-2:     #f2f7f6;
+
+  --fg:          #1b2026;   /* ~15:1 on white  */
+  --fg-soft:     #444c56;   /* ~9:1           */
+  --fg-dim:      #5b646f;   /* ~6.3:1         */
+  --fg-faint:    #6c7480;   /* ~5:1, small text safe */
+
+  --line:        #dde4e3;
+  --line-soft:   #e9efee;
+  --line-bright: #c4cecc;
+  --line-input:  #8b939d;   /* form borders, 3.1:1 on white (WCAG 1.4.11) */
+
+  /* alerts are the only non-teal colour the system permits */
+  --danger:      #b42318;   /* ~6.4:1 */
+  --danger-bg:   #fdecea;
+  --warn:        #8a5300;   /* accessible amber text ~5:1 */
+  --warn-bg:     #fbf1e0;
+  --ok:          #0f766e;   /* positive / healthy = teal */
+
+  /* teal accent family */
+  --accent:        #0f766e;   /* teal, 5.5:1 on white */
+  --accent-strong: #0c5f59;   /* teal hover/pressed, 7.5:1 */
+  --accent-weak:   #e6f4f2;   /* light teal tint */
+  --accent-text:   #0c5750;   /* teal text on tint or white */
+
+  --radius:      8px;
+}
+
+/* ---------------- base ---------------- */
+[data-theme="light"] body {
+  background: var(--bg);
+  color: var(--fg);
+  font-weight: 400;
+  font-size: 14px;
+  -webkit-font-smoothing: auto;
+}
+[data-theme="light"] ::selection { background: #cdeae6; color: #0a3b35; }
+[data-theme="light"] :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* suppress the particle + HUD ornament layer */
+[data-theme="light"] #cloud,
+[data-theme="light"] .cloud-mask,
+[data-theme="light"] .hud-frame,
+[data-theme="light"] .reticle { display: none !important; }
+
+/* ---------------- surfaces ---------------- */
+[data-theme="light"] .panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 1px 2px rgba(16,24,40,.04), 0 1px 3px rgba(16,24,40,.05);
+}
+[data-theme="light"] .sidebar { background: #ffffff; border-right: 1px solid var(--line); }
+[data-theme="light"] .topbar  { background: #ffffff; border-bottom: 1px solid var(--line); color: var(--fg); }
+[data-theme="light"] .statusbar { background: #ffffff; border-top: 1px solid var(--line); color: var(--fg-dim); }
+
+/* ---------------- navigation ---------------- */
+[data-theme="light"] .nav-cap { color: var(--fg-faint); letter-spacing: 0.1em; }
+[data-theme="light"] .nav-item { color: var(--fg-dim); border-radius: var(--radius); }
+[data-theme="light"] .nav-item:hover { background: #eef4f3; color: var(--fg); }
+[data-theme="light"] .nav-item.active {
+  background: var(--accent-weak); color: var(--accent-text);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+[data-theme="light"] .nav-item.active .glyph { color: var(--accent); }
+[data-theme="light"] .nav-badge {
+  background: #eef4f3; color: var(--fg-dim);
+  border: 1px solid var(--line); border-radius: 999px;
+}
+
+/* ---------------- buttons ---------------- */
+[data-theme="light"] .btn {
+  background: var(--accent); color: #ffffff; border: 1px solid var(--accent);
+  border-radius: var(--radius); font-weight: 500; letter-spacing: 0.01em;
+}
+[data-theme="light"] .btn:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
+[data-theme="light"] .btn.ghost { background: #ffffff; color: var(--fg); border: 1px solid var(--line-bright); }
+[data-theme="light"] .btn.ghost:hover { background: #eef4f3; }
+[data-theme="light"] .btn.danger { background: var(--danger); color: #ffffff; border-color: var(--danger); }
+[data-theme="light"] .btn.danger:hover { background: #97160c; border-color: #97160c; }
+
+/* ---------------- form controls ---------------- */
+[data-theme="light"] .input,
+[data-theme="light"] .select,
+[data-theme="light"] .textarea {
+  background: #ffffff; color: var(--fg);
+  border: 1px solid var(--line-input); border-radius: var(--radius);
+}
+[data-theme="light"] .input::placeholder,
+[data-theme="light"] .textarea::placeholder { color: var(--fg-faint); }
+[data-theme="light"] .input:focus,
+[data-theme="light"] .select:focus,
+[data-theme="light"] .textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(15,118,110,.18);
+}
+[data-theme="light"] .field-label {
+  color: var(--fg-dim); letter-spacing: 0.02em; text-transform: none;
+  font-size: 12px; font-weight: 500;
+}
+
+/* ---------------- type legibility ---------------- */
+[data-theme="light"] .view-title { color: var(--fg); }
+[data-theme="light"] .view-sub   { color: var(--fg-dim); letter-spacing: 0.01em; text-transform: none; font-size: 12.5px; }
+[data-theme="light"] .panel-title { color: var(--fg); letter-spacing: 0.04em; }
+[data-theme="light"] .panel-title.is-danger { color: var(--danger); }
+[data-theme="light"] .row-name { color: var(--fg); }
+[data-theme="light"] .row-meta { color: var(--fg-dim); letter-spacing: 0; }
+[data-theme="light"] .t-label  { color: var(--fg-dim); }
+[data-theme="light"] .t-dim    { color: var(--fg-dim); }
+[data-theme="light"] .t-faint  { color: var(--fg-faint); }
+[data-theme="light"] .t-soft   { color: var(--fg-soft); }
+[data-theme="light"] .empty    { color: var(--fg-faint); }
+
+/* ---------------- chips & status ---------------- */
+[data-theme="light"] .chip {
+  background: #eef4f3; color: var(--fg-soft);
+  border: 1px solid var(--line-bright); border-radius: 999px;
+}
+[data-theme="light"] .chip.is-active   { background: var(--accent-weak); color: var(--accent-text); border-color: #bfe0db; }
+[data-theme="light"] .chip.is-risk     { background: var(--danger-bg); color: var(--danger); border-color: #f3c5c0; }
+[data-theme="light"] .chip.is-monitoring { background: var(--warn-bg); color: var(--warn); border-color: #ecd9b3; }
+[data-theme="light"] .chip.is-closed   { background: #eef2f1; color: var(--fg-dim); }
+[data-theme="light"] .chip.is-new      { background: var(--accent-weak); color: var(--accent-text); border-color: #c4e6e1; }
+[data-theme="light"] .tag {
+  background: #eef4f3; color: var(--fg-soft); border: 1px solid var(--line);
+}
+
+/* ---------------- bars (assessment subscales) ---------------- */
+[data-theme="light"] .bar-track { background: #e7eeed; border-radius: 999px; }
+[data-theme="light"] .bar-fill  { background: var(--accent); border-radius: 999px; }
+[data-theme="light"] .bar-fill.warn   { background: var(--warn); }
+[data-theme="light"] .bar-fill.danger { background: var(--danger); }
+
+/* ---------------- modals ---------------- */
+[data-theme="light"] .overlay { background: rgba(16,24,40,.45); }
+[data-theme="light"] .modal {
+  background: #ffffff; border: 1px solid var(--line);
+  border-radius: 12px; box-shadow: 0 16px 48px rgba(16,24,40,.18);
+}
+[data-theme="light"] .modal-head { border-bottom: 1px solid var(--line-soft); }
+[data-theme="light"] .modal-foot { border-top: 1px solid var(--line-soft); }
+[data-theme="light"] .rule { background: var(--line-soft); }
+
+/* ---------------- entry screens (login / splash) ---------------- */
+[data-theme="light"] .lock-inner::before { display: none !important; }
+[data-theme="light"] .hud-readout,
+[data-theme="light"] .boot-mark, [data-theme="light"] .boot-sub, [data-theme="light"] .boot-log, [data-theme="light"] .boot-tele,
+[data-theme="light"] .lock-mark, [data-theme="light"] .lock-sub, [data-theme="light"] .boot-title, [data-theme="light"] .lock-title {
+  text-shadow: none !important;
+}
+[data-theme="light"] .boot-title, [data-theme="light"] .lock-title { color: var(--fg); }
+[data-theme="light"] .boot-mark, [data-theme="light"] .lock-mark { color: var(--fg-dim); }
+[data-theme="light"] .boot-sub,  [data-theme="light"] .lock-sub  { color: var(--fg-soft); }
+[data-theme="light"] .boot-log   { display: none; }
+[data-theme="light"] .boot-tele .tele b { color: var(--fg); }
+[data-theme="light"] .boot-tele .tele i { color: var(--fg-faint); }
+[data-theme="light"] .boot-tele .tele.is-alert b { color: var(--warn); }
+[data-theme="light"] .lock-inner {
+  background: #ffffff; border: 1px solid var(--line);
+  border-radius: 14px; box-shadow: 0 10px 36px rgba(16,24,40,.10);
+  padding: 34px 32px;
+}
+[data-theme="light"] .lock .field-label,
+[data-theme="light"] .lock .t-faint { text-shadow: none !important; }
+[data-theme="light"] .lock .field-label { color: var(--fg-dim); }
+[data-theme="light"] .lock .t-faint     { color: var(--fg-faint); }
+
+/* ---------------- guide / calendar accents ---------------- */
+[data-theme="light"] .g-tab.on { border-bottom-color: var(--accent); color: var(--accent); }
+[data-theme="light"] .g-catchip.on { background: var(--accent-weak); border-color: var(--accent); color: var(--accent-text); }
+[data-theme="light"] .g-bad  { background: var(--danger-bg); }
+[data-theme="light"] .g-good { background: #f2f7f6; }
+[data-theme="light"] .cal-cell.today { border-color: var(--accent); }
+[data-theme="light"] .cal-cell.selected { background: var(--accent-weak); border-color: var(--accent); }
+[data-theme="light"] .cal-appt { background: var(--accent-weak); color: var(--accent-text); }
+[data-theme="light"] .rm-cell { background: var(--panel-2); }
+[data-theme="light"] .rm-cell.hit { box-shadow: 0 0 0 2px var(--accent); border-color: var(--accent); color: var(--fg); }
+
+/* score readouts stay legible */
+[data-theme="light"] .score-big { color: var(--fg); }

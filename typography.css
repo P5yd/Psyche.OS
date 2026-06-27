@@ -1,0 +1,56 @@
+/* ============================================================
+   PSYCHE.OS v3  ·  typography.css
+   Thin display + monospace HUD readouts
+   Drop .woff2 files into assets/fonts/ to run fully offline;
+   the @import below is the online fallback.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@200;300;400;500&display=swap');
+
+/* ---- display: hairline weights, the personality of the page ---- */
+.t-mega {
+  font-weight: 100;
+  font-size: clamp(40px, 9vw, 132px);
+  line-height: 0.94;
+  letter-spacing: -0.03em;
+}
+
+.t-display {
+  font-weight: 200;
+  font-size: clamp(22px, 3vw, 34px);
+  letter-spacing: -0.01em;
+}
+
+.t-h1 { font-weight: 200; font-size: 22px; letter-spacing: 0.01em; }
+.t-h2 { font-weight: 300; font-size: 16px; letter-spacing: 0.02em; }
+
+/* ---- the HUD micro-label: monospace, wide tracking, dim ---- */
+.t-label {
+  font-family: var(--font-mono);
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+.t-eyebrow {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--fg-soft);
+}
+
+/* ---- data readouts ---- */
+.t-mono   { font-family: var(--font-mono); font-weight: 300; }
+.t-data   { font-family: var(--font-mono); font-weight: 200; font-variant-numeric: tabular-nums; }
+.t-num    { font-family: var(--font-mono); font-weight: 100; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+
+.t-soft  { color: var(--fg-soft); }
+.t-dim   { color: var(--fg-dim); }
+.t-faint { color: var(--fg-faint); }
+
+.upper { text-transform: uppercase; }
+.track { letter-spacing: 0.2em; }

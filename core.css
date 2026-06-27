@@ -1,0 +1,99 @@
+/* ============================================================
+   PSYCHE.OS v3  ·  core.css
+   Reset, design tokens, base elements
+   Monochrome Point Cloud · pure black · white particles
+   ============================================================ */
+
+:root {
+  /* --- surface --- */
+  --bg:        #000000;
+  --panel:     rgba(0, 0, 0, 0.86);
+  --panel-2:   rgba(8, 8, 8, 0.92);
+
+  /* --- ink --- */
+  --fg:        #ffffff;
+  --fg-soft:   rgba(255, 255, 255, 0.62);
+  --fg-dim:    rgba(255, 255, 255, 0.38);
+  --fg-faint:  rgba(255, 255, 255, 0.16);
+
+  /* --- hairlines (no gradients, no glass) --- */
+  --line:      rgba(255, 255, 255, 0.14);
+  --line-soft: rgba(255, 255, 255, 0.07);
+  --line-bright: rgba(255, 255, 255, 0.30);
+
+  /* --- alerts are the ONLY colour the system permits --- */
+  --danger:    #ff3b30;
+  --danger-bg: rgba(255, 59, 48, 0.10);
+  --warn:      #ffcc00;
+  --warn-bg:   rgba(255, 204, 0, 0.10);
+  --ok:        #ffffff;   /* neutral confirmations stay monochrome */
+
+  /* --- type --- */
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
+
+  /* --- metrics --- */
+  --topbar-h: 46px;
+  --sidebar-w: 232px;
+  --statusbar-h: 30px;
+  --radius: 0px;          /* zero radius: HUD discipline */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
+}
+
+::selection { background: var(--fg); color: var(--bg); }
+
+a { color: inherit; text-decoration: none; }
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+button { cursor: pointer; }
+
+/* keyboard focus is always visible (quality floor) */
+:focus-visible {
+  outline: 1px solid var(--fg);
+  outline-offset: 2px;
+}
+
+/* thin scrollbars to match the HUD */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line); }
+::-webkit-scrollbar-thumb:hover { background: var(--line-bright); }
+
+/* The point-cloud canvas always sits behind everything */
+#cloud {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  pointer-events: none;
+}
+
+/* Everything interactive floats above the cloud */
+.layer { position: relative; z-index: 1; }
+
+[hidden] { display: none !important; }

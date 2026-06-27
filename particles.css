@@ -1,0 +1,97 @@
+/* ============================================================
+   PSYCHE.OS v3  ·  particles.css
+   Styling for the point-cloud canvas layer, the 2D fallback
+   field, and the boot overlay that sits on top of it.
+   ============================================================ */
+
+/* the cloud canvas itself is positioned in core.css (#cloud) */
+
+/* a faint vignette is NOT allowed (no gradients on surfaces);
+   instead we dim the cloud near edges with a hairline mask frame */
+.cloud-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  /* single radial used only to keep particles from competing with
+     text at screen centre — extremely subtle, monochrome */
+  background: radial-gradient(circle at 50% 50%,
+              transparent 0%, transparent 46%, rgba(0,0,0,0.55) 100%);
+}
+
+/* boot overlay (index.html) */
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.boot-mark {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.5em;
+  color: var(--fg-dim);
+  margin-bottom: 26px;
+  text-transform: uppercase;
+}
+
+.boot-title {
+  font-weight: 100;
+  font-size: clamp(48px, 11vw, 150px);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+}
+.boot-title b { font-weight: 300; }
+
+.boot-sub {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.34em;
+  color: var(--fg-soft);
+  margin-top: 18px;
+  text-transform: uppercase;
+}
+
+.boot-log {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--fg-dim);
+  margin-top: 38px;
+  min-height: 16px;
+  text-transform: uppercase;
+}
+
+.boot-enter {
+  margin-top: 44px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--fg);
+  padding: 13px 34px;
+  border: 1px solid var(--line-bright);
+  transition: background 0.4s var(--ease), color 0.4s var(--ease), letter-spacing 0.4s var(--ease);
+}
+.boot-enter:hover { background: var(--fg); color: var(--bg); letter-spacing: 0.5em; }
+
+/* particle progress bar (hairline) */
+.boot-bar {
+  width: 220px;
+  height: 1px;
+  background: var(--line-soft);
+  margin-top: 30px;
+  position: relative;
+  overflow: hidden;
+}
+.boot-bar i {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 0%;
+  background: var(--fg);
+}

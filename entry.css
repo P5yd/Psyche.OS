@@ -1,0 +1,64 @@
+/* ============================================================
+   PSYCHE.OS v3 · entry.css
+   Readability pass for the splash + login over the point cloud.
+   Loaded LAST on both pages so it wins. Keeps the monochrome look:
+   it lifts the small HUD text off the particle noise with a tight
+   dark halo, eases the extreme letter-spacing, and darkens a soft
+   well behind the login card while leaving the brain visible.
+   ============================================================ */
+
+/* larger edge vignette + a faint central pool so text reads while
+   the brain still shows around and through it */
+.cloud-mask {
+  background:
+    radial-gradient(circle at 50% 50%,
+      rgba(0,0,0,0.34) 0%, rgba(0,0,0,0.12) 24%, transparent 38%,
+      transparent 60%, rgba(0,0,0,0.74) 100%);
+}
+
+/* tight dark halo keeps small mono text legible wherever a bright
+   particle sits behind a glyph, without lightening the scene */
+.hud-readout, .boot-mark, .boot-sub, .boot-log, .boot-tele,
+.lock-mark, .lock-sub, .lock .field-label, .lock .t-faint {
+  text-shadow: 0 0 6px rgba(0,0,0,0.96), 0 1px 2px rgba(0,0,0,0.96);
+}
+.boot-title, .lock-title { text-shadow: 0 0 18px rgba(0,0,0,0.55); }
+
+/* lift the faintest tokens and ease the tracking a touch */
+.hud-readout            { color: rgba(255,255,255,0.36); letter-spacing: 0.18em; }
+.boot-mark, .lock-mark  { color: rgba(255,255,255,0.60); letter-spacing: 0.40em; }
+.boot-sub,  .lock-sub   { color: rgba(255,255,255,0.80); }
+.lock .field-label      { color: rgba(255,255,255,0.64); }
+.lock .t-faint          { color: rgba(255,255,255,0.32); }
+
+/* soft dark backing behind the login card so labels + inputs read;
+   feathered so the rotating brain still reads around it */
+.lock-inner { position: relative; }
+.lock-inner::before {
+  content: ""; position: absolute; z-index: -1;
+  inset: -40px -52px;
+  background: radial-gradient(ellipse at 50% 46%,
+      rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.62) 46%, transparent 80%);
+  pointer-events: none;
+}
+
+/* splash telemetry readout (real counts) */
+.boot-tele {
+  display: flex; gap: 26px; justify-content: center; flex-wrap: wrap;
+  letter-spacing: 0;
+}
+.boot-tele .tele { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.boot-tele .tele b {
+  font-family: var(--font-mono); font-weight: 500; font-size: 18px;
+  color: rgba(255,255,255,0.92); letter-spacing: 0.02em;
+}
+.boot-tele .tele i {
+  font-style: normal; font-family: var(--font-mono); font-size: 8.5px;
+  letter-spacing: 0.18em; color: rgba(255,255,255,0.44); text-transform: uppercase;
+}
+.boot-tele .tele.is-alert b { color: var(--warn); }
+
+@media (max-width: 480px) {
+  .boot-tele { gap: 18px; }
+  .boot-tele .tele b { font-size: 15px; }
+}

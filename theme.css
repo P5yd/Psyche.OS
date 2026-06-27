@@ -1,0 +1,95 @@
+/* ============================================================
+   PSYCHE.OS v3  ·  theme.css
+   The Monochrome HUD: corner brackets, reticle, scan frame.
+   This is the signature layer. Keep it quiet; let the cloud
+   and the hairlines do the talking.
+   ============================================================ */
+
+/* ---- full-screen HUD frame that wraps the whole interface ---- */
+.hud-frame {
+  position: fixed;
+  inset: 14px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hud-bracket {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--line-bright);
+}
+.hud-bracket.tl { top: 0;    left: 0;    border-right: 0; border-bottom: 0; }
+.hud-bracket.tr { top: 0;    right: 0;   border-left: 0;  border-bottom: 0; }
+.hud-bracket.bl { bottom: 0; left: 0;    border-right: 0; border-top: 0;    }
+.hud-bracket.br { bottom: 0; right: 0;   border-left: 0;  border-top: 0;    }
+
+/* corner coordinate readouts — pure ornament, but true to the HUD idea */
+.hud-readout {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: var(--fg-faint);
+  text-transform: uppercase;
+}
+.hud-readout.tl { top: 4px;  left: 26px;  }
+.hud-readout.tr { top: 4px;  right: 26px; text-align: right; }
+.hud-readout.bl { bottom: 4px; left: 26px; }
+.hud-readout.br { bottom: 4px; right: 26px; text-align: right; }
+
+/* a single hairline crosshair tick that lives at screen centre on boot */
+.reticle {
+  position: fixed;
+  top: 50%; left: 50%;
+  width: 1px; height: 1px;
+  z-index: 2;
+  pointer-events: none;
+}
+.reticle::before, .reticle::after {
+  content: '';
+  position: absolute;
+  background: var(--line);
+}
+.reticle::before { left: -7px; top: 0; width: 14px; height: 1px; }
+.reticle::after  { top: -7px; left: 0; height: 14px; width: 1px; }
+
+/* ---- status chips (the only place colour is allowed) ---- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fg-soft);
+  padding: 3px 9px;
+  border: 1px solid var(--line);
+}
+.chip .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--fg-soft); }
+
+.chip.is-active  .dot { background: var(--fg); }
+.chip.is-active  { color: var(--fg); border-color: var(--line-bright); }
+.chip.is-monitoring .dot { background: var(--warn); }
+.chip.is-monitoring { color: var(--warn); border-color: rgba(255,204,0,0.35); }
+.chip.is-risk    .dot { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+.chip.is-risk    { color: var(--danger); border-color: rgba(255,59,48,0.45); }
+.chip.is-closed  { color: var(--fg-dim); }
+.chip.is-new     { color: var(--fg); }
+
+/* danger / warn text helpers */
+.is-danger { color: var(--danger) !important; }
+.is-warn   { color: var(--warn) !important; }
+
+/* a hairline divider used throughout */
+.rule { height: 1px; background: var(--line); border: 0; margin: 18px 0; }
+.rule.soft { background: var(--line-soft); }
+
+/* reduced-motion users get a still cloud and no transitions */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

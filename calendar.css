@@ -1,0 +1,90 @@
+/* ============================================================
+   PSYCHE.OS v3 · calendar.css
+   Month grid + day agenda. Monochrome, zero radius, hairlines;
+   colour only for alert (Crisis / No-show) and today.
+   ============================================================ */
+
+.cal-head {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 14px;
+}
+.cal-nav { display: flex; gap: 6px; }
+.cal-month {
+  flex: 1; text-align: center;
+  font-family: var(--font-mono); font-size: 13px;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--fg);
+}
+
+.grid-cal {
+  display: grid; grid-template-columns: 1.7fr 1fr; gap: 14px;
+  align-items: start;
+}
+.cal-panel { padding: 14px; }
+
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; }
+.cal-dow-row { margin-bottom: 6px; gap: 0; }
+.cal-dow {
+  text-align: center; padding: 6px 0;
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--fg-faint);
+}
+
+.cal-cell {
+  min-height: 92px; padding: 6px;
+  border: 1px solid var(--line-soft);
+  background: transparent; cursor: pointer;
+  display: flex; flex-direction: column; gap: 3px;
+  transition: background .15s var(--ease), border-color .15s var(--ease);
+  overflow: hidden;
+}
+.cal-cell:hover { border-color: var(--line); background: rgba(255,255,255,0.02); }
+.cal-cell.other { opacity: 0.32; }
+.cal-cell.today { border-color: var(--line-bright); }
+.cal-cell.today .cal-daynum { color: var(--fg); }
+.cal-cell.selected { background: rgba(255,255,255,0.05); border-color: var(--fg-dim); }
+
+.cal-daynum {
+  font-family: var(--font-mono); font-size: 11px; color: var(--fg-soft);
+  align-self: flex-end; line-height: 1;
+}
+
+.cal-appt {
+  font-family: var(--font-mono); font-size: 9.5px; line-height: 1.3;
+  color: var(--fg-soft);
+  padding: 2px 4px; border-left: 2px solid var(--line-bright);
+  background: rgba(255,255,255,0.04);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cal-appt b { color: var(--fg); font-weight: 500; }
+.cal-appt.is-alert { border-left-color: var(--danger); color: var(--danger); }
+.cal-appt.is-alert b { color: var(--danger); }
+.cal-appt.is-done { opacity: 0.5; text-decoration: line-through; border-left-color: var(--line); }
+.cal-more {
+  font-family: var(--font-mono); font-size: 9px; color: var(--fg-faint);
+  letter-spacing: 0.06em; padding-left: 4px;
+}
+
+/* ---------- agenda ---------- */
+.appt-row {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 12px 0; border-bottom: 1px solid var(--line-soft);
+}
+.appt-row:last-child { border-bottom: none; }
+.appt-row.is-cancelled { opacity: 0.5; }
+.appt-row.is-cancelled .row-name { text-decoration: line-through; }
+
+.appt-time {
+  font-family: var(--font-mono); font-size: 15px; color: var(--fg);
+  min-width: 56px; line-height: 1.1;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.appt-time span { font-size: 9px; color: var(--fg-faint); letter-spacing: 0.08em; }
+
+.appt-side { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.appt-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+
+@media (max-width: 880px) {
+  .grid-cal { grid-template-columns: 1fr; }
+  .cal-cell { min-height: 64px; }
+  .cal-appt { font-size: 8.5px; }
+}
